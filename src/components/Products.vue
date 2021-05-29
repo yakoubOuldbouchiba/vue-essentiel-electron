@@ -1,30 +1,30 @@
 <template>
   <div>
-    <h1>My Shop</h1>
     <navbar :cart="cart" :cartQty="cartQty" :cartTotal="cartTotal"></navbar>
-    <price-slider :sliderStatus="sliderStatus" :maximum.sync="maximum"></price-slider>
-    <product-list :maximum="maximum" :products="products"></product-list>
+    <h1 class="text-center mt-0">Shop</h1>
+    <p>You're clever to choose us</p>
+    <product-list 
+      :products="products"
+      :modelPhoto="modelPhoto"
+    >
+    </product-list>
   </div>
 </template>
 <script>
 import Navbar from "./Navbar.vue";
-import PriceSlider from "./PriceSlider.vue";
 import ProductList from "./ProductList.vue";
 
 export default {
   name: "products",
   props: [
     "products",
-    "maximum",
     "cart",
     "cartQty",
     "cartTotal",
-    "sliderStatus",
-    "sliderState"
+    "modelPhoto"
   ],
   components: {
     Navbar,
-    PriceSlider,
     ProductList
   }
 };

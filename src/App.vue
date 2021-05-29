@@ -1,15 +1,15 @@
 <template>
   <div id="app" class="container mt-5">
+    <img class="img-fuild m-auto d-block" src="images/cabinet.jpg" alt="Cabinet Logo">
     <router-view
       :cart="cart"
       :cartQty="cartQty"
       :cartTotal="cartTotal"
-      :sliderStatus="sliderStatus"
-      :maximum.sync="maximum"
       :products="products"
+      :modelPhoto="modelPhoto"
       @add="addItem"
       @delete="deleteItem"
-      @toggle="toggleSliderStatus"
+      @setCurrentPhoto="setCurrentPhoto"
     ></router-view>
   </div>
 </template>
@@ -19,10 +19,9 @@ export default {
   name: "app",
   data: function() {
     return {
-      maximum: 99,
-      sliderStatus: true,
       cart: [],
-      products: null
+      products: null,
+      modelPhoto:null
     };
   },
   computed: {
@@ -42,8 +41,9 @@ export default {
     }
   },
   methods: {
-    toggleSliderStatus: function() {
-      this.sliderStatus = !this.sliderStatus;
+  
+    setCurrentPhoto(item){
+      this.modelPhoto = item;
     },
     deleteItem: function(id) {
       if (this.cart[id].qty > 1) {

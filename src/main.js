@@ -7,6 +7,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "animate.css/animate.css";
+const { ipcRenderer } = window.require('electron');
 
 import {
   faShoppingCart,
@@ -17,6 +18,8 @@ library.add(faShoppingCart, faDollarSign);
 
 import Products from "./components/Products.vue";
 import Checkout from "./components/Checkout.vue";
+
+
 
 Vue.use(VueRouter);
 Vue.config.productionTip = false;
@@ -38,3 +41,11 @@ new Vue({
   render: h => h(App),
   router
 }).$mount("#app");
+
+ipcRenderer.on("checkout" ,()=>{
+  router.push('/checkout');
+});
+
+ipcRenderer.on("shop" , ()=>{
+  router.push('/');
+});

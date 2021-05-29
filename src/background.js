@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow , Menu} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -9,12 +9,14 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+let win;
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon:"icon.png",
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -22,7 +24,8 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
     }
-  })
+  });
+  win.maximize();
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -49,6 +52,67 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+const menuTemplate = [
+  {
+    label:'Carbon Shop',
+    submenu : [
+      {role : 'close'},
+      {
+        label:"visit my site",
+        click(){
+          require('electron').shell.openExternal("https://7ty.tech/")
+        }
+      },
+      {
+        label:'Quit',
+        role:'quit'
+      }
+    ]
+  },
+  {
+    label:'Edit',
+    submenu : [
+      {role : 'undo'},
+      {role : 'redo'},
+      {role : 'cut'},
+      {role : 'copy'},
+      {role : 'paste'},
+      {role : 'selectall'},
+    ]
+  },
+  {
+    label:'View',
+    submenu : [
+      {role:'resetzoom'},
+      {role:'zoomin'},
+      {role:'zoomout'},
+      {type:'separator'},
+      {role:'togglefullscreen'}
+    ]
+  },
+  {
+    label:'Shop',
+    submenu : [
+      {
+        label:'Shop',
+        accelerator : process.platform === "darwin" ? "Command+shit+I" : "Ctrl+shit+I",
+        click(item){
+          win.webContents.send('shop');
+        } 
+      },
+      {
+        label:'Checkout',
+        accelerator  : process.platform === "darwin" ? "Command+shit+U" : "Ctrl+shit+U",
+        click(item){
+          win.webContents.send('checkout');
+        } 
+      },
+    ]
+  }
+];
+
+const myAppMenu = Menu.buildFromTemplate(menuTemplate);
+Menu.setApplicationMenu(myAppMenu);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

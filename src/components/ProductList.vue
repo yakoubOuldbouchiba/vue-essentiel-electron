@@ -1,27 +1,42 @@
 <template>
-  <transition-group name="fade" tag="div" @beforeEnter="beforeEnter" @enter="enter" @leave="leave">
-    <div
-      class="row d-flex mb-3 align-items-center"
-      v-for="(item, index) in products"
-      :key="item.id"
-      v-if="item.price<=Number(maximum)"
-      :data-index="index"
-    >
-      <div class="col-1 m-auto">
-        <button class="btn btn-info" @click="$parent.$emit('add', item)">+</button>
-      </div>
-      <div class="col-4">
-        <img class="img-fluid d-block" :src="item.image" :alt="item.name">
-      </div>
-      <div class="col">
-        <h3 class="text-info">{{ item.name }}</h3>
-        <p class="mb-0">{{ item.description }}</p>
-        <div class="h5 float-right">
-          <price :value="Number(item.price)"></price>
+  <div>
+    <article id="side-modal" class="modal fade">
+      <div class="modal-dialog modal-dialog-centered model-xl">
+        <div class="modal-content">
+          <img  data-dismiss="modal" class="img-fluid" :src="modelPhoto" alt="a product picture">
         </div>
       </div>
-    </div>
-  </transition-group>
+    </article>
+    <transition-group name="fade" tag="div" @beforeEnter="beforeEnter" @enter="enter" @leave="leave">
+      <div
+        class="row d-flex mb-3 align-items-center"
+        v-for="(item, index) in products"
+        :key="item.id"
+        :data-index="index"
+      >
+        <div class="col-1 m-auto">
+          <button class="btn btn-info" @click="$parent.$emit('add', item)">+</button>
+        </div>
+        <div class="col-2">
+          <img 
+              data-toggle="modal"
+              data-target="#side-modal"
+              class="lowers img-fluid d-block" 
+              :src="item.image" 
+              :alt="item.name"
+              @click="$parent.$emit('setCurrentPhoto' , item.image)"
+          >
+        </div>
+        <div class="col">
+          <h3 class="text-info">{{ item.name }}</h3>
+          <p class="mb-0">{{ item.description }}</p>
+          <div class="h5 float-right">
+            <price :value="Number(item.price)"></price>
+          </div>
+        </div>
+      </div>
+    </transition-group>
+  </div>
 </template>
 
 <script>
@@ -30,7 +45,7 @@ import Price from "./Price.vue";
 export default {
   name: "product-list",
   components: { Price },
-  props: ["products", "maximum"],
+  props: ["products" , "modelPhoto"],
   methods: {
     beforeEnter: function(el) {
       el.className = "d-none";
@@ -52,3 +67,8 @@ export default {
   }
 };
 </script>
+<style>
+.lowers:hover{
+  cursor: pointer;
+}
+</style>
